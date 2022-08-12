@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService.Server";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package github;
+
+service GitHubCallService
+{
+	rpc GetUserDetails (GithubUserRequest) returns (GitHubResponse);
+	rpc GetUserDetailsIdOnly (GithubUserRequest) returns (GitHubUserResponse);
+	rpc GetUserDetailsStream (GithubUserRequest) returns (stream GitHubResponse);
+	rpc GetUserRequestStream (stream GithubUserRequest) returns (MultiGitHubResponse);
+	rpc GetInputOnly (stream GithubUserRequest) returns (google.protobuf.Empty);
+	rpc Chat(stream Msg) returns (stream Msg);
+}
+
+message GithubUserRequest{
+	string name = 1;
+}
+
+message GitHubResponse
+{
+	int32 id = 1;
+	string name = 2;
+	string bio = 3;
+	google.protobuf.Timestamp timestamp = 4;
+	string userName = 5;
+}
+
+message GitHubUserResponse
+{
+	int32 id = 1;
+}
+
+message MultiGitHubResponse
+{
+	repeated GitHubResponse response = 1;
+}
+
+message Msg
+{
+	string messageText = 1;
+	string sentBy = 2;
+}
